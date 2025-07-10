@@ -1,12 +1,11 @@
+let humanScore = 0;
+let computerScore = 0;
+
 function getComputerChoice(){
     let number = Math.random();
-    if (number < 0.33) {
-        return "rock";
-    } else if (number < 0.66) {
-        return "paper";
-    } else {
-        return "scissors"       
-    }
+    if (number < 0.33) return "rock";
+    else if (number < 0.66) return "paper";
+    else return "scissors";
 }
 
 function getHumanChoice() {
@@ -27,9 +26,13 @@ function getHumanChoice() {
 function playRound(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
         return "You both chose " + humanChoice + ". You both live.";
-    } else if ((humanChoice === "rock" && computerChoice === "scissors") ||
+    }
+
+    const win = (humanChoice === "rock" && computerChoice === "scissors") ||
                (humanChoice === "paper" && computerChoice === "rock") ||
-               (humanChoice === "scissors" && computerChoice === "paper")) {
+               (humanChoice === "scissors" && computerChoice === "paper");
+
+    if (win) {
         humanScore++;
         return "You win!\n You chose " + humanChoice + " and the cpu chose " + computerChoice + ". Good Game!";
     } else {
@@ -38,16 +41,14 @@ function playRound(humanChoice, computerChoice) {
     }
 }
 
-let humanScore = 0;
-let computerScore = 0;
+document.querySelectorAll("button[data-choice]").forEach((button) => {
+    button.addEventListener("click", () => {
+        const humanChoice = button.getAttribute("data-choice");
+        const computerChoice = getComputerChoice();
+        const result = playRound(humanChoice, computerChoice);
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        const player = getHumanChoice();
-        const cpu = getComputerChoice();
-        console.log(playRound(player, cpu))
-    }
-    console.log(`Final score: You ${humanScore} - CPU ${computerScore}`);
-}
-
-playGame();
+        document.getElementById("result").textContent = result;
+        document.getElementById("human-score").textContent = humanScore;
+        document.getElementById("computer-score").textContent = computerScore;
+    })
+})
